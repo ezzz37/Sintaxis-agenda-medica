@@ -107,8 +107,8 @@ def ModificarCita(agenda):
     # Mostrar todas las citas con indice
     print("Citas registradas:")
     for i, cita in enumerate(agenda, 1):
-        print(f"{i}. DNI: {verDni(cita)} - Nombre: {verNombre(cita)} - Fecha: {verFecha(cita)} - Hora: {verHora(cita)}")
-
+        mostrarCita(cita)
+        print("-" * 40)
     dni_busqueda = input("Ingrese el DNI de la cita que desea modificar: ")
 
     for cita in agenda:
@@ -143,6 +143,56 @@ def ModificarCita(agenda):
             return
     print("No se encontro ninguna cita con ese DNI.")
 
+#punto c
+def EliminarCita(agenda):
+    limpiarPantalla()
+
+    if esVacia(agenda):
+        print("La agenda esta vacia.")
+        return
+
+    print("Citas registradas:")
+    for i in range(tamnioAgenda(agenda)):
+        cita = recuperarCita(agenda, i + 1)
+        mostrarCita(cita)
+        print("-" * 40)
+
+    # Validar entrada de DNI
+    while True:
+        dni_busqueda = input("Ingrese el DNI del paciente para eliminar su cita: ").strip()
+        if validar_dni_busqueda(dni_busqueda):
+            break
+        else:
+            print("Dni invalido, intenta de nuevo.")
+
+    i = 0
+    encontrado = False
+    while i < tamnioAgenda(agenda):
+        cita = recuperarCita(agenda, i + 1)
+        if verDni(cita) == dni_busqueda:
+            limpiarPantalla()
+            print("Cita encontrada:")
+            mostrarCita(cita)
+
+            # Validar respuesta de confirmacion
+            while True:
+                confirmacion = input("Esta seguro que desea eliminar esta cita? (s/n): ").strip().lower()
+                if confirmacion == 's':
+                    eliminarCita(agenda, cita)
+                    print("Cita eliminada con exito.")
+                    encontrado = True
+                    break
+                elif confirmacion == 'n':
+                    print("Eliminacion cancelada.")
+                    encontrado = True
+                    break
+                else:
+                    print("Respuesta invalida. Ingrese 's' para si o 'n' para no.")
+            break  # Salimos del while principal después de eliminar o cancelar
+        else:
+            i += 1
+    if not encontrado:
+        print("No se encontro ninguna cita con ese DNI.")
 
 def menu():
     limpiarPantalla()
@@ -161,7 +211,7 @@ def menu():
         elif opcion == 2:
             ModificarCita(agenda)
         elif opcion == 3:
-            pass
+            EliminarCita(agenda)
         elif opcion == 4:
             limpiarPantalla()
             if not agenda:
