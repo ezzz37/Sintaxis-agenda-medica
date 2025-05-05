@@ -34,35 +34,131 @@ pacientes citados en un día específico, e imprimirla inmediatamente en pantall
 from TAD.TADagendaCita import *
 from TAD.TADcita import *
 from TAD.TADcola import *
+from validaciones.validacionesINC1 import *
 from datetime import datetime
+import os
+
+agenda = crearAgenda()
+cola = crearCola()
+
+def limpiarPantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def validFloat(msg):
+    while True:
+        try:
+            return float(input(msg))
+        except ValueError:
+            print("Ingrese un num valido.")
+
+
+
+def validFecha(msg):
+    while True:
+        fecha = input(msg)
+        try:
+            datetime.strptime(fecha, "%d/%m/%Y")
+            return fecha
+        except ValueError:
+            print("Formato de fecha invalido. Intente de nuevo (dd/mm/aaaa).")
+
+def altaDeCita():
+    b = True
+    while b:
+        cita = crearCita()
+        #val dni
+        while True:
+            dni = input("Ingrese el DNI del paciente: ").strip()
+            if validar_dni(dni, agenda):
+                break
+            print("DNI invalido. debe contener solo numeros y tener 8 digitos.")
+            
+        #val nombre
+        while True:
+            nombre = input("Ingrese el nombre del paciente: ").strip()
+            if validar_nombre(nombre):
+                break
+            print("El nombre no puede estar vacio")
+
+        # val obra social
+        while True:
+            obraSocial = input("Ingrese la obra social del paciente: ").strip()
+            if validar_obra_social(obraSocial):
+                break
+            print("La obra social no puede estar vacia.")
+
+        # val de telefono
+        while True:
+            telefono = input("Ingrese el telefono del paciente: ").strip()
+            if validar_telefono(telefono):
+                break
+            print("telefono invalido. Debe contener solo numero y tener entre 6 y 15 digitos.")
+
+        # Validación de fecha
+        while True:
+            fecha = input("Ingrese la fecha de la cita (dd/mm/aaaa): ").strip()
+            if validar_fecha(fecha):
+                break
+            print("Fecha invalido. Debe ser una fecha futura y en formato dd/mm/aaaa.")
+
+        # Validación de hora
+        while True:
+            hora = input("Ingrese la hora de la cita (HH:MM): ").strip()
+            if validar_hora(hora):
+                break
+            print("Hora invalida. Debe estar en formato HH:MM y ser una hora valida.")
+
+        cargarCita(cita, dni, nombre, obraSocial, telefono, fecha, hora)
+        agregarCita(agenda, cita)
+        print("Cita registrada con exito.")
+        limpiarPantalla()
+
+        seguir = input("¿Desea registrar otra cita? (s/n): ").lower()
+        if seguir != 's':
+            b = False
 
 def menu():
+    limpiarPantalla()
     print("\n1. Alta de citas")
     print("2. Modificar fecha y hora de una cita") 
     print("3. Eliminar cita")
     print("4. Listado completo de citas")
     print("5. Traslado de citas de un dia a otro")
     print("6. Eliminar citas de una obra social")
-    print("7. Generar lista filtrada de pacientes de un daa")
+    print("7. Generar lista filtrada de pacientes de un dia")
     print("0. Salir")
-    opcion = int(input("Ingrese una opcion: "))
-    if opcion == 1:
-        pass
-    elif opcion == 2:
-        pass
-    elif opcion == 3:
-        pass
-    elif opcion == 4:
-        pass
-    elif opcion == 5:
-        pass
-    elif opcion == 6:
-        pass
-    elif opcion == 7:
-        pass
-    elif opcion == 0:
-        print("Saliendo...")
-
+    try:
+        opcion = int(input("Ingrese una opcion: "))
+        if opcion == 1:
+            altaDeCita()
+        elif opcion == 2:
+            pass
+        elif opcion == 3:
+            pass
+        elif opcion == 4:
+            limpiarPantalla()
+            if not agenda:
+                print("No hay citas registradas.")
+            else:
+                for cita in agenda:
+                    mostrarCita(cita)
+                    print("-" * 40)
+        elif opcion == 5:
+            pass
+        elif opcion == 6:
+            pass
+        elif opcion == 7:
+            pass
+        elif opcion == 0:
+            print("Saliendo...")
+        else:
+            print("opcion no valida, por favor ingrese una opcion entre 0 y 7.")
+    except ValueError:
+            print("Por favor, ingrese un numero valida entre 0 y 7.")
 
 if __name__ == "__main__":
-    menu()
+    while True:
+        menu()
+        if input("¿Desea continuar? (s/n): ").lower() != 's':
+            break
