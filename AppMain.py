@@ -173,7 +173,6 @@ def EliminarCita(agenda):
             limpiarPantalla()
             print("Cita encontrada:")
             mostrarCita(cita)
-
             # Validar respuesta de confirmacion
             while True:
                 confirmacion = input("Esta seguro que desea eliminar esta cita? (s/n): ").strip().lower()
@@ -188,11 +187,108 @@ def EliminarCita(agenda):
                     break
                 else:
                     print("Respuesta invalida. Ingrese 's' para si o 'n' para no.")
-            break  # Salimos del while principal después de eliminar o cancelar
+            break
         else:
             i += 1
     if not encontrado:
         print("No se encontro ninguna cita con ese DNI.")
+
+#punto d
+def transladoCitas(agenda):
+    limpiarPantalla()
+    if esVacia(agenda):
+        print("La agenda esta vacia.")
+        return
+    
+    while True:
+        fecha_original = input("Ingrese la fecha de origen (dd/mm/aaaa): ").strip()
+        if validar_fecha_existente(fecha_original, agenda):
+            break
+        print("Fecha invalida o sin citas. Intente de nuevo.")
+
+    while True:
+        nueva_fecha = input("Ingrese la nueva fecha destino (dd/mm/aaaa): ").strip()
+        if validar_fecha(nueva_fecha):
+            break
+        print("Fecha invalida. Debe estar en formato dd/mm/aaaa y ser futura.")
+
+    trasladadas = 0
+    for cita in agenda:
+        if verFecha(cita) == fecha_original:
+            modFecha(cita, nueva_fecha)
+            trasladadas += 1
+    
+    limpiarPantalla()
+    if trasladadas == 0:
+        print(f"No se encontraron citas para la fecha {fecha_original}.")
+    else:
+        print(f"{trasladadas} cita(s) trasladadas exitosamente de {fecha_original} a {nueva_fecha}.")
+
+#punto e.a
+def eliminarCitasObraSocial(agenda):
+    limpiarPantalla()
+
+    if esVacia(agenda):
+        print("La agenda esta vacia.")
+        return
+    
+    while True:
+        obra_social = input("Ingrese el nombre de la obra social para eliminar sus citas: ").strip()
+        if validar_obra_social(obra_social):
+            break
+        print("Obra social invalida. Intente de nuevo.")
+
+    total = tamnioAgenda(agenda)
+    eliminadas = 0
+    i = 0
+
+    while i < total:
+        cita = recuperarCita(agenda, i + 1) #acomodar indice(el 1er elemento tine indice 0 no 1)
+        if verObraSocial(cita).lower() == obra_social.lower():
+            eliminarCita(agenda, cita)
+            eliminadas += 1 #aumento el cont para llevar reg de cuantas se eliminaron
+            total -= 1 #aumento el total para que no se repitan los indices
+        else:
+            i += 1 #si no es la obra social que buscamos, avanzo al siguiente elemento
+
+    limpiarPantalla()
+
+    if eliminadas == 0:
+        print(f"No se encontraron citas asociadas a la obra social '{obra_social}'.")
+    else:
+        print(f"{eliminadas} citas eliminadas de la obra social '{obra_social}'.")
+
+#punto e.b
+
+def generarListaFiltrada(agenda):
+    limpiarPantalla()
+
+    if esVacia(agenda):
+        print("La agenda esta vacia.")
+        return
+    
+    while True:
+        fecha = input("Ingrese la fecha para filtrar las citas (dd/mm/aaaa): ").strip()
+        if validar_fecha(fecha):
+            break
+        print("Fecha invalida. Debe estar en formato dd/mm/aaaa.")
+
+    cola_filtrada = crearCola()
+
+    for cita in agenda:
+        if verFecha(cita) == fecha:
+            nombre = verNombre(cita)
+            obra_social = verObraSocial(cita)
+
+            encolar(cola_filtrada,(nombre, obra_social)) #encolar el nombre y la obra social
+    limpiarPantalla()
+    if esColaVacia(cola_filtrada):
+        print(f"No se encontraron citas para la fecha {fecha}.")
+    else:
+        print(f"Citas filtradas para la fecha {fecha}:")
+        while not esColaVacia(cola_filtrada):
+            nombre, obra_social = desencolar(cola_filtrada)
+            print(f"Nombre: {nombre}, Obra Social: {obra_social}")
 
 def menu():
     limpiarPantalla()
@@ -221,11 +317,11 @@ def menu():
                     mostrarCita(cita)
                     print("-" * 40)
         elif opcion == 5:
-            pass
+            transladoCitas(agenda)
         elif opcion == 6:
-            pass
+            eliminarCitasObraSocial(agenda)
         elif opcion == 7:
-            pass
+            generarListaFiltrada(agenda)
         elif opcion == 0:
             print("Saliendo...")
         else:

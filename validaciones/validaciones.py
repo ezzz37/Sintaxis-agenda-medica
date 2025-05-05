@@ -54,3 +54,12 @@ def validFecha(msg):
             return fecha
         except ValueError:
             print("Formato de fecha invalido. Intente de nuevo (dd/mm/aaaa).")
+
+def validar_dni_busqueda(dni):
+    return dni.isdigit() and len(dni) == 8
+
+def validar_fecha_existente(fecha, agenda):
+    for cita in agenda:
+        if verFecha(cita) == fecha:
+            return True
+    return False
