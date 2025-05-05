@@ -34,35 +34,14 @@ pacientes citados en un día específico, e imprimirla inmediatamente en pantall
 from TAD.TADagendaCita import *
 from TAD.TADcita import *
 from TAD.TADcola import *
-from validaciones.validacionesINC1 import *
+from validaciones.validaciones import *
 from datetime import datetime
 import os
 
 agenda = crearAgenda()
 cola = crearCola()
 
-def limpiarPantalla():
-    os.system('cls' if os.name == 'nt' else 'clear')
-
-
-def validFloat(msg):
-    while True:
-        try:
-            return float(input(msg))
-        except ValueError:
-            print("Ingrese un num valido.")
-
-
-
-def validFecha(msg):
-    while True:
-        fecha = input(msg)
-        try:
-            datetime.strptime(fecha, "%d/%m/%Y")
-            return fecha
-        except ValueError:
-            print("Formato de fecha invalido. Intente de nuevo (dd/mm/aaaa).")
-
+#punto a
 def altaDeCita():
     b = True
     while b:
@@ -118,6 +97,53 @@ def altaDeCita():
         if seguir != 's':
             b = False
 
+#punto b
+def ModificarCita(agenda):
+    limpiarPantalla()
+    if esVacia(agenda):
+        print("La agenda esta vacia.")
+        return
+    
+    # Mostrar todas las citas con indice
+    print("Citas registradas:")
+    for i, cita in enumerate(agenda, 1):
+        print(f"{i}. DNI: {verDni(cita)} - Nombre: {verNombre(cita)} - Fecha: {verFecha(cita)} - Hora: {verHora(cita)}")
+
+    dni_busqueda = input("Ingrese el DNI de la cita que desea modificar: ")
+
+    for cita in agenda:
+        if verDni(cita) == dni_busqueda:
+            limpiarPantalla()
+            print("Cita encontrada:")
+            mostrarCita(cita)
+
+            # Validar fecha
+            while True:
+                nueva_fecha = input("Ingrese la nueva fecha (dd/mm/aaaa): ")
+                if validar_fecha(nueva_fecha):
+                    break
+                else:
+                    print("Fecha invalida. Ingrese una fecha valida en formato dd/mm/aaaa.")
+
+            # Validar hora
+            while True:
+                nueva_hora = input("Ingrese la nueva hora (HH:MM): ")
+                if validar_hora(nueva_hora):
+                    break
+                else:
+                    print("Hora invalida. Ingrese la hora en formato HH:MM (24hs).")
+            
+            # Modificar cita
+            modFecha(cita, nueva_fecha)
+            modHora(cita, nueva_hora)
+
+            limpiarPantalla()
+            print("Cita modificada con exito.")
+            mostrarCita(cita)
+            return
+    print("No se encontro ninguna cita con ese DNI.")
+
+
 def menu():
     limpiarPantalla()
     print("\n1. Alta de citas")
@@ -133,7 +159,7 @@ def menu():
         if opcion == 1:
             altaDeCita()
         elif opcion == 2:
-            pass
+            ModificarCita(agenda)
         elif opcion == 3:
             pass
         elif opcion == 4:

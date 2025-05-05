@@ -1,6 +1,7 @@
 from datetime import datetime
 from TAD.TADagendaCita import *
 from TAD.TADcita import *
+import os
 
 def validar_dni(dni, agenda):
     if not (dni.isdigit() and len(dni) == 8): #isdigit verifican que sean string de numeros
@@ -34,3 +35,22 @@ def validar_hora(hora):
         return True
     except ValueError:
         return False
+
+def limpiarPantalla():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def validFloat(msg):
+    while True:
+        try:
+            return float(input(msg))
+        except ValueError:
+            print("Ingrese un num valido.")
+
+def validFecha(msg):
+    while True:
+        fecha = input(msg)
+        try:
+            datetime.strptime(fecha, "%d/%m/%Y")
+            return fecha
+        except ValueError:
+            print("Formato de fecha invalido. Intente de nuevo (dd/mm/aaaa).")
