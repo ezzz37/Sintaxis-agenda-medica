@@ -58,7 +58,7 @@ def altaDeCita():
             nombre = input("Ingrese el nombre del paciente: ").strip()
             if validar_nombre(nombre):
                 break
-            print("El nombre no puede estar vacio")
+            print("El nombre no puede estar vacio o tiene caracteres no validos.")
 
         # val obra social
         while True:
