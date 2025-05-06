@@ -300,8 +300,13 @@ def menu():
     print("6. Eliminar citas de una obra social")
     print("7. Generar lista filtrada de pacientes de un dia")
     print("0. Salir")
-    try:
-        opcion = int(input("Ingrese una opcion: "))
+    op = input("Ingrese una opcion: ").strip() #el strip elimina los espacios
+    try:  
+        if len(op) != 1 or op not in "01234567": #el len obtiene la longitud y si no es 1 no esta en el rango de 0 a 7
+            raise ValueError("la opcion no es valida")
+
+        opcion = int(op)
+         
         if opcion == 1:
             altaDeCita()
         elif opcion == 2:

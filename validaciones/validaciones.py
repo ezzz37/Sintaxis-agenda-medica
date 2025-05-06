@@ -14,10 +14,13 @@ def validar_dni(dni, agenda):
 
 
 def validar_nombre(nombre):
-    return bool(nombre.strip())
+    nombre = nombre.strip()
+    return bool(nombre) and nombre.isalpha() and len(nombre) <= 10
 
-def validar_obra_social(obra_social):
-    return bool(obra_social.strip()) #strip() saca espacios vacios
+
+def validar_obra_social(obraSocial):
+    obraSocial = obraSocial.strip() #strip() saca espacios vacios
+    return bool(obraSocial) and obraSocial.isalpha() and len(obraSocial) <= 10 #isalpha() verifica que sean string de letras y no numeros
 
 def validar_telefono(telefono):
     return telefono.isdigit() and 6 <= len(telefono) <= 15

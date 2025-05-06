@@ -57,4 +57,3 @@ def mostrarCita(c):
     print(f"Telefono: {verTelefono(c)}")
     print(f"Fecha de la cita: {verFecha(c)}")
     print(f"Hora de la cita: {verHora(c)}")
-
