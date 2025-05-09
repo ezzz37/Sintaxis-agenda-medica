@@ -49,11 +49,3 @@ def modHora(c,hora):
 
 def copiar(c1,c2):
     c1[:] = c2[:]
-
-def mostrarCita(c):
-    print(f"DNI: {verDni(c)}")
-    print(f"Nombre: {verNombre(c)}")
-    print(f"Obra Social: {verObraSocial(c)}")
-    print(f"Telefono: {verTelefono(c)}")
-    print(f"Fecha de la cita: {verFecha(c)}")
-    print(f"Hora de la cita: {verHora(c)}")
